@@ -8,6 +8,9 @@ def transform_df(df, transformations):
     for t in transformations.get('astype', []):
         df[t[0]] = df[t[0]].astype(t[1])
 
+    for t in transformations.get('replace', []):
+        df[t[0]].replace(t[1], t[2], inplace=True)
+
     if 'geometry' in transformations:
         df.set_geometry(transformations['geometry'], inplace=True)
 

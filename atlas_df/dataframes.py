@@ -1,4 +1,5 @@
 import re
+from numpy import nan
 from pandas import DataFrame, Series
 from geopandas import GeoDataFrame, GeoSeries
 from ripe.atlas.cousteau import AtlasResultsRequest, AnchorRequest, MeasurementRequest
@@ -99,8 +100,37 @@ class MeasurementResultDataFrame(DataFrame):
         return MeasurementResultSeries
 
     def __init__(self, filters):
-        lst = load_or_fetch(lambda **x: AtlasResultsRequest(**x).create()[1], filters)
+        lst = load_or_fetch(lambda **x: AtlasResultsRequest(**x).create()[1],
+                            filters)
         super().__init__(lst)
+
+        if len(self['type'].unique()) > 1:
+            print('Warning: more than 1 measurement type in results')
+        t = self['type'].unique()[0]
+
+        if t == 'ping':
+            transform_df(
+                self, {
+                    'apply': [('timestamp', parse_timestamp),
+                              ('stored_timestamp', parse_timestamp),
+                              ('dst_addr', parse_ip_address),
+                              ('src_addr', parse_ip_address)],
+                    'replace': [('avg', -1.0, nan), ('min', -1.0, nan),
+                                ('max', -1.0, nan)],
+                    'index': ['prb_id', 'timestamp']
+                })
+        elif t == 'traceroute':
+            transform_df(
+                self, {
+                    'apply': [('timestamp', parse_timestamp),
+                              ('stored_timestamp', parse_timestamp),
+                              ('dst_addr', parse_ip_address),
+                              ('src_addr', parse_ip_address)],
+                    'index': ['prb_id', 'timestamp']
+                })
+
+        else:
+            print('MeasurementResultDataFrame not implemented for %s' % t)
 
 
 class MeasurementResultSeries(Series):
