@@ -5,6 +5,8 @@
 [![Build Status](https://travis-ci.org/maxmouchet/atlas_df.svg?branch=master)](https://travis-ci.org/maxmouchet/atlas_df)
 [![Coverage Status](https://coveralls.io/repos/github/maxmouchet/atlas_df/badge.svg?branch=master)](https://coveralls.io/github/maxmouchet/atlas_df?branch=master)
 
+[![Example Map](https://github.com/maxmouchet/atlas_df/blob/master/examples/1001_map.png)](#)
+
 **Features:**
 - [Caching](#cache) of API requests.
 - geo plot/queries ...
