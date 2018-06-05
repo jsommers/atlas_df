@@ -1,19 +1,46 @@
+import atlas_df
+import os
 import json
 
 
-def load_or_fetch(fn, kwargs={}, salt=None):
-    _hash = hash((salt, json.dumps(dict_to_str_kv(kwargs), sort_keys=True)))
-    _fname = '%s.json' % _hash
+def fetch(fn, kwargs):
+    return fn(**kwargs)
 
-    # TODO: mkdir cache
+
+def load(fn, kwargs, salt):
+    _fname = get_cache_fname(fn, kwargs, salt)
+    with open(_fname, 'r') as f:
+        res = json.load(f)
+    return res
+
+
+def store(fn, kwargs, salt, res):
+    _fname = get_cache_fname(fn, kwargs, salt)
 
     try:
-        with open(_fname, 'r') as f:
-            res = json.load(f)
+        os.mkdir(atlas_df.CACHE_DIR)
+    except FileExistsError:
+        pass
+
+    with open(_fname, 'w') as f:
+        json.dump(res, f)
+
+
+def get_cache_fname(fn, kwargs, salt):
+    _hash = hash((salt, json.dumps(dict_to_str_kv(kwargs), sort_keys=True)))
+    _fname = os.path.join(atlas_df.CACHE_DIR, '%s.json' % _hash)
+    return _fname
+
+
+def load_or_fetch(fn, kwargs={}, salt=None):
+    if not atlas_df.CACHE_ENABLED:
+        return fetch(fn, kwargs)
+
+    try:
+        res = load(fn, kwargs, salt)
     except (FileNotFoundError, json.JSONDecodeError):
-        res = fn(**kwargs)
-        with open(_fname, 'w') as f:
-            json.dump(res, f)
+        res = fetch(fn, kwargs)
+        store(fn, kwargs, salt, res)
 
     return res
 
