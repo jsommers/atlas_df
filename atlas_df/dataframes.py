@@ -1,8 +1,8 @@
 import re
 from pandas import DataFrame, Series
 from geopandas import GeoDataFrame, GeoSeries
-from ripe.atlas.cousteau import AnchorRequest, MeasurementRequest
-from .io import load_or_fetch_list
+from ripe.atlas.cousteau import AtlasResultsRequest, AnchorRequest, MeasurementRequest
+from .io import load_or_fetch, load_or_fetch_list
 from .helpers import transform_df
 from .parsers import parse_ip_address, parse_geometry, parse_timestamp
 
@@ -69,19 +69,39 @@ class MeasurementDataFrame(DataFrame):
         super().__init__(lst)
 
         transform_df(
-            self, {
-                'apply':
-                [('creation_time', parse_timestamp),
-                 ('start_time', parse_timestamp),
-                 ('status', 'status_id', lambda x: x['id']),
-                 ('description', 'target_fqdn',
-                  lambda x: re.match(r'.+for anchor\s+(.+)', x).group(1)),
-                 ('status', lambda x: x['name'])],
+            self,
+            {
+                'apply': [
+                    ('creation_time', parse_timestamp),
+                    ('start_time', parse_timestamp),
+                    ('status', 'status_id', lambda x: x['id']),
+                    #  ('description', 'target_fqdn',
+                    #   lambda x: re.match(r'.+for anchor\s+(.+)', x).group(1)),
+                    ('status', lambda x: x['name'])
+                ],
                 'index':
                 'id'
             })
 
 
 class MeasurementSeries(Series):
-    def fetch_results(self, start_datetime, stop_datetime):
-        pass
+    def fetch_results(self, filters={}):
+        filters['msm_id'] = int(self.name)
+        return MeasurementResultDataFrame(filters)
+
+
+## Results
+
+
+class MeasurementResultDataFrame(DataFrame):
+    @property
+    def _constructor_sliced(self):
+        return MeasurementResultSeries
+
+    def __init__(self, filters):
+        lst = load_or_fetch(lambda **x: AtlasResultsRequest(**x).create()[1], filters)
+        super().__init__(lst)
+
+
+class MeasurementResultSeries(Series):
+    pass
