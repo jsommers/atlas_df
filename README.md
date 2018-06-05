@@ -56,6 +56,8 @@ cd atlas_df
 pip install -e .
 ```
 
+Code is formatted using [yapf](https://github.com/google/yapf).
+
 ### Running tests
 
 ```bash
