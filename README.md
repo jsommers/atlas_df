@@ -1,27 +1,52 @@
-# atlas_df
- A dataframe-oriented API for RIPE Atlas data.
+# atlas-df: a dataframe-oriented interface to the RIPE Atlas API
 
 ![PyPI - License](https://img.shields.io/pypi/l/atlas_df.svg?style=flat-square)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/atlas_df.svg?style=flat-square)
 
+
+
+TODO: Fill out this long description.
+
+## Table of Contents
+
+- [Install](#install)
+- [Usage](#usage)
+- [Development](#development)
+- [Maintainers](#maintainers)
+- [Contribute](#contribute)
+- [License](#license)
+
+## Install
+
 ```bash
 pip install atlas_df
-# or (dev)
+```
+
+## Usage
+
+```python
+from atlas_df.dataframes import AnchorDataFrame
+
+anchors = AnchorDataFrame()
+measurements = anchors.loc[1029].fetch_mesh_measurements()
+```
+
+## Development
+
+```bash
+git clone https://github.com/maxmouchet/atlas_df.git
+cd atlas_df
 pip install -e .
 ```
 
-```python
-import geopandas as gpd
-from atlas_df.dataframes import AnchorGeoDataFrame
+## Maintainers
 
-world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
-base = world.plot(color='white', edgecolor='black')
+[@maxmouchet](https://github.com/maxmouchet)
 
-anchors.plot('is_ipv4_only', ax=base)
-```
+## Contribute
 
-Class | Superclass | Index | Transformations
-------|------------|-------|----------------
-AnchorDataFrame | pandas.DataFrame | `id` | Build objects for `ip_v4`, `ip_v6`, `geometry`
-AnchorGeoDataFrame | pandas.GeoDataFrame | `id` | Build objects for `ip_v4`, `ip_v6`, `geometry`
-MeasurementDataFrame | pandas.DataFrame | `id` | Build objects for `creation_time`, `start_time`. Extract `status`, `status_id`, `target_fqdn`
+PRs accepted.
+
+## License
+
+MIT © 2018 Maxime Mouchet
