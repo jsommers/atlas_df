@@ -8,7 +8,10 @@
 
 [![Example Map](https://github.com/maxmouchet/atlas_df/blob/master/examples/1001_map.png)](#)
 
+atlas_df is an interface to the RIPE Atlas API built on top of the official client ([ripe-atlas-cousteau](https://github.com/RIPE-NCC/ripe-atlas-cousteau)). It converts Atlas resources to [pandas](https://github.com/pandas-dev/pandas) and [geopandas](https://github.com/geopandas/geopandas) DataFrames/Series. This makes the use of the Python scientific ecosystem (matplotlib, seaborn, numpy, scikit-learn, ...) with Atlas data very easy.
+
 **Features:**
+- Conversion of RIPE Atlas resources to `DataFrame` and `Series` objects.
 - [Caching](#cache) of API requests.
 - geo plot/queries ...
 TODO: logging
