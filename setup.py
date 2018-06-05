@@ -8,7 +8,7 @@ setuptools.setup(
     version="0.0.1",
     author="Maxime Mouchet",
     author_email="max@maxmouchet.com",
-    description="A dataframe-oriented API for RIPE Atlas data. ",
+    description="A dataframe-oriented interface to RIPE Atlas.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/maxmouchet/atlas_df",

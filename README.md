@@ -1,11 +1,9 @@
-# atlas-df: a dataframe-oriented interface to the RIPE Atlas API
+# atlas-df: a dataframe-oriented interface to RIPE Atlas
 
-![PyPI - License](https://img.shields.io/pypi/l/atlas_df.svg?style=flat-square)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/atlas_df.svg?style=flat-square)
+[![PyPI - License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/maxmouchet/atlas_df/blob/master/LICENSE)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/atlas_df.svg?style=flat-square)](#)
 
 
-
-TODO: Fill out this long description.
 
 ## Table of Contents
 
