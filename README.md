@@ -1,4 +1,4 @@
-# atlas-df: a dataframe-oriented interface to the RIPE Atlas
+# atlas-df: a dataframe-oriented interface to RIPE Atlas
 
 ![PyPI - License](https://img.shields.io/pypi/l/atlas_df.svg?style=flat-square)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/atlas_df.svg?style=flat-square)
