@@ -1,6 +1,9 @@
 # atlas_df
  A dataframe-oriented API for RIPE Atlas data.
 
+![PyPI - License](https://img.shields.io/pypi/l/atlas_df.svg?style=flat-square)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/atlas_df.svg?style=flat-square)
+
 ```bash
 pip install atlas_df
 # or (dev)
