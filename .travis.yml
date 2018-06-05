@@ -1,0 +1,45 @@
+language: python
+
+python:
+  - '3.6'
+
+install:
+  - sudo apt-get update
+  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update -q conda
+  - conda info -a
+  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION pytest pytest-cov
+    coveralls matplotlib
+  - source activate test-environment
+  - python setup.py install
+
+script:
+- coverage run --source atlas_df/ -m pytest
+
+after_success:
+- python3 setup.py sdist bdist_wheel
+- coveralls
+
+deploy:
+  - provider: releases
+    api_key:
+      secure: guAT605po476LSLHRQabUVrOrT+DPjen1MlS5mKTcWrcwgVxFQo20BmsaJvhShH7tmX1AqVb4R/8+0YcI/wGf0aDbCjN+F6xXni0coqV77HoEEgJufuoqxfssOYz3TEgokxWA9Po5PHcbktJiU89gbltxYMKc8YlKXRgSPki+UfqmQbQUAo+KLOzZ3o+n7saB6zLyow86040L3R4HkYKK9WeA+FZY7hTKQb5cPjKq+Ja1OXQ1v5hUecUwYDWgX3AY+QJOTX5/+ciWBUl+DYlypCuBbCH8RuOLV4YWp0Rg8m11xvw/1vbpPI7S+Xd5yHQ7hDfbPmMHWxIRpFCTnurS1f8DpqHhBBXpd4JiwN5GMNgRnsGXteL9nWuG37Yyx0Sixs5SRewRxWrDAaKEXA0+k8v0bJUpZOUUorMHT7AVA3msZDUfjp8hwiTMw1QiIJYs0/nwGb5sv5ZvPexNQa571vuuocWezqhZ66N2kZQiQIhF89WUO0eDpIf+ws0vtDmKMSXXUEJuGhVsVQf+59xRDm1pZZ5X0nu7ReKe0C+XLF3DocuMZsa2tyj3X8eQJ+uM+0vIZHJo8H41lC5HUAPQMhkA2uBJQQ3Q3Tjk8WrN6HqqgYHJVRpogUG26gKiSDjxezqDUESx3gk/cVlETn/veLNJqM3FREXnZDCj0+U3oo=
+    file_glob: true
+    file: dist/*
+    skip_cleanup: true
+    on:
+      tags: true
+  - provider: pypi
+    user: maxmouchet
+    password:
+      secure: z/Y4yh6DIx9JbCU7aC/AYI6VpN38RfLJyRChyOzzffMLC2E3YRkjI74uq7B8juW6FZw3CcOpFpjzUUD3ZH0+ST1rTzR57Ft5zKdk3UHfJOWItVQNxaK9cec7b3NTOSAZnVlc+K48utopEpYsG8jo2yeMuj+xLT3BzKjNMBycx6+bwWHo+j7hOhk1Vr2/dic/12GpSSKnJ5y6EJxxSnrHoN+2xm6K2iAKgVViq/vKNXZ+lKtPj72NN7TEw2v24kumohL0dL5gNWgi37XZpozM7W7YiDyP4wGno9e1dnvQ59kd9stcoyjCU4LmpUb9g+wfGK0T6WWdyD8Kzpn0puJyFUMwKRGuSBQ0HhAIXuTgT/8PjhV8RA0dHBydaYzjAQ4tqOp5NbO5scSc8y+s2u1YeP0w5Yus2V33klocQJG+hcg6CfeP60Wf0694LKzFC6nWkJc16zeU7rvustsOyo+c3OmkWJH+ulJMTLGZqtR1AIcuQM3ixMJRFbtqtIpKwGsFORP1K1rXR8/rBCzSyeklRlgUnarqPiDANOqGJfEQHGxkVJqxP1flpUCX/SLEvPcwa4/M/nQOp/uxdnW1NZwmIwm8GisNr/lvt6t1wj40RuBKItHMvzdUNT2GFfzYz325X3SLsMKb069FVMcTpIbFrRKxatnZ+3sqjTj4+231M+c=
+    on:
+      tags: true
+
+notifications:
+  email: false
+ 
