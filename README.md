@@ -1,9 +1,11 @@
-# atlas-df: a dataframe-oriented interface to RIPE Atlas
+# atlas_df: a dataframe-oriented interface to RIPE Atlas
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/maxmouchet/atlas_df/blob/master/LICENSE)
 [![Python Version](https://img.shields.io/badge/python-3-blue.svg?style=flat)](#)
 [![Build Status](https://travis-ci.org/maxmouchet/atlas_df.svg?branch=master)](https://travis-ci.org/maxmouchet/atlas_df)
 [![Coverage Status](https://coveralls.io/repos/github/maxmouchet/atlas_df/badge.svg?branch=master)](https://coveralls.io/github/maxmouchet/atlas_df?branch=master)
+
+[![Example Map](https://github.com/maxmouchet/atlas_df/blob/master/examples/1001_map.png)](#)
 
 **Features:**
 - [Caching](#cache) of API requests.
