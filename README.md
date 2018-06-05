@@ -16,3 +16,9 @@ base = world.plot(color='white', edgecolor='black')
 
 anchors.plot('is_ipv4_only', ax=base)
 ```
+
+Class | Superclass | Index | Transformations
+------|------------|-------|----------------
+AnchorDataFrame | pandas.DataFrame | `id` | Build objects for `ip_v4`, `ip_v6`, `geometry`
+AnchorGeoDataFrame | pandas.GeoDataFrame | `id` | Build objects for `ip_v4`, `ip_v6`, `geometry`
+MeasurementDataFrame | pandas.DataFrame | `id` | Build objects for `creation_time`, `start_time`. Extract `status`, `status_id`, `target_fqdn`
