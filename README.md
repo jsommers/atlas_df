@@ -27,6 +27,8 @@ TODO: logging
 
 ## Install
 
+atlas_df is a Python 3 library, depending on your setup, you may want to use `pip` or `pip3`.
+
 ```bash
 pip install atlas_df
 ```
@@ -61,7 +63,7 @@ Code is formatted using [yapf](https://github.com/google/yapf).
 ### Building documentation
 
 ```bash
-pip install sphinx
+pip install sphinx sphinx-rtd-theme
 sphinx-apidoc -f -o docs/source/ atlas_df
 cd docs; make html
 ```
