@@ -4,6 +4,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/maxmouchet/atlas_df/blob/master/LICENSE)
 [![DOI](https://zenodo.org/badge/136143389.svg)](https://zenodo.org/badge/latestdoi/136143389)
 [![Build Status](https://travis-ci.org/maxmouchet/atlas_df.svg?branch=master)](https://travis-ci.org/maxmouchet/atlas_df)
+[![Documentation Status](https://readthedocs.org/projects/atlas_df/badge/?version=latest)](https://atlas-df.readthedocs.io/en/latest/)
 [![Coverage Status](https://coveralls.io/repos/github/maxmouchet/atlas_df/badge.svg?branch=master)](https://coveralls.io/github/maxmouchet/atlas_df?branch=master)
 
 [![Example Map](https://github.com/maxmouchet/atlas_df/blob/master/examples/1001_map.png)](#)
@@ -34,6 +35,8 @@ pip install atlas_df
 ```
 
 ## Usage
+
+A comprehensive (TODO) documentation is on [Read the Docs](https://atlas-df.readthedocs.io/en/latest/).
 
 ```python
 from atlas_df.dataframes import AnchorDataFrame
