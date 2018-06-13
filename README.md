@@ -45,6 +45,24 @@ anchors = AnchorDataFrame()
 measurements = anchors.loc[1029].fetch_mesh_measurements()
 ```
 
+
+### Anchoring
+
+```python
+import datetime as dt
+from atlas_df.anchoring import AnchoringMesh
+
+anchoring_mesh = AnchoringMesh()
+
+anchor_fqdn_a = 'al-tia-as42409.anchors.atlas.ripe.net'
+anchor_fqdn_b = 'nc-nou-as56055.anchors.atlas.ripe.net'
+start_datetime = dt.datetime(2018, 5, 1)
+stop_datetime  = dt.datetime(2018, 5, 7)
+af = 4
+
+traceroute_ab, traceroute_ba = anchoring_mesh.fetch_results(anchor_fqdn_a, anchor_fqdn_b, af, 'traceroute', {'start': START_DATETIME, 'stop': STOP_DATETIME})
+```
+
 ### Cache
 
 ```python
