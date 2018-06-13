@@ -52,6 +52,14 @@ cd atlas_df
 pip install -e .
 ```
 
+### Building documentation
+
+```bash
+pip install sphinx
+sphinx-apidoc -f -o docs/source/ atlas_df
+cd docs; make html
+```
+
 ### Running tests
 
 ```bash
