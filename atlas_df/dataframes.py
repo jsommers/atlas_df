@@ -12,29 +12,17 @@ from .parsers import parse_ip_address, parse_geometry, parse_timestamp
 
 class AnchorDataFrame(DataFrame):
     @property
-    def _constructor_sliced(self):
-        return AnchorSeries
+    def _constructor(self):
+        return AnchorDataFrame
 
-    def __init__(self, filters={}):
-        lst = load_or_fetch_list(AnchorRequest, filters)
-        super().__init__(lst)
-
-        transform_df(
-            self, {
-                'apply': [('ip_v4', parse_ip_address),
-                          ('ip_v6', parse_ip_address),
-                          ('geometry', parse_geometry)],
-                'index':
-                'id'
-            })
-
-
-class AnchorGeoDataFrame(GeoDataFrame):
     @property
     def _constructor_sliced(self):
         return AnchorSeries
 
     def __init__(self, filters={}):
+        if type(filters) is not dict:
+            return super().__init__(filters)
+
         lst = load_or_fetch_list(AnchorRequest, filters)
         super().__init__(lst)
 
@@ -43,11 +31,34 @@ class AnchorGeoDataFrame(GeoDataFrame):
                 'apply': [('ip_v4', parse_ip_address),
                           ('ip_v6', parse_ip_address),
                           ('geometry', parse_geometry)],
-                'index':
-                'id',
-                'geometry':
-                'geometry'
-            })
+                'index': 'id'
+            }) # yapf: disable
+
+
+# class AnchorGeoDataFrame(GeoDataFrame):
+#     @property
+#     def _constructor(self):
+#         return AnchorGeoDataFrame
+
+#     @property
+#     def _constructor_sliced(self):
+#         return AnchorSeries
+
+#     def __init__(self, filters={}):
+#         if type(filters) is not dict:
+#             return super().__init__(filters)
+
+#         lst = load_or_fetch_list(AnchorRequest, filters)
+#         super().__init__(lst)
+
+#         transform_df(
+#             self, {
+#                 'apply': [('ip_v4', parse_ip_address),
+#                           ('ip_v6', parse_ip_address),
+#                           ('geometry', parse_geometry)],
+#                 'index': 'id',
+#                 'geometry': 'geometry'
+#             }) # yapf: disable
 
 
 class AnchorSeries(Series):
@@ -62,16 +73,22 @@ class AnchorSeries(Series):
 
 class MeasurementDataFrame(DataFrame):
     @property
+    def _constructor(self):
+        return MeasurementDataFrame
+
+    @property
     def _constructor_sliced(self):
         return MeasurementSeries
 
     def __init__(self, filters):
+        if type(filters) is not dict:
+            return super().__init__(filters)
+
         lst = load_or_fetch_list(MeasurementRequest, filters)
         super().__init__(lst)
 
         transform_df(
-            self,
-            {
+            self, {
                 'apply': [
                     ('creation_time', parse_timestamp),
                     ('start_time', parse_timestamp),
@@ -80,9 +97,8 @@ class MeasurementDataFrame(DataFrame):
                     #   lambda x: re.match(r'.+for anchor\s+(.+)', x).group(1)),
                     ('status', lambda x: x['name'])
                 ],
-                'index':
-                'id'
-            })
+                'index': 'id'
+            }) # yapf: disable
 
 
 class MeasurementSeries(Series):
@@ -96,10 +112,17 @@ class MeasurementSeries(Series):
 
 class MeasurementResultDataFrame(DataFrame):
     @property
+    def _constructor(self):
+        return MeasurementResultDataFrame
+
+    @property
     def _constructor_sliced(self):
         return MeasurementResultSeries
 
     def __init__(self, filters):
+        if type(filters) is not dict:
+            return super().__init__(filters)
+
         lst = load_or_fetch(lambda **x: AtlasResultsRequest(**x).create()[1],
                             filters)
         super().__init__(lst)
@@ -115,10 +138,11 @@ class MeasurementResultDataFrame(DataFrame):
                               ('stored_timestamp', parse_timestamp),
                               ('dst_addr', parse_ip_address),
                               ('src_addr', parse_ip_address)],
-                    'replace': [('avg', -1.0, nan), ('min', -1.0, nan),
+                    'replace': [('avg', -1.0, nan),
+                                ('min', -1.0, nan),
                                 ('max', -1.0, nan)],
                     'index': ['prb_id', 'timestamp']
-                })
+                }) # yapf: disable
         elif t == 'traceroute':
             transform_df(
                 self, {
@@ -127,7 +151,7 @@ class MeasurementResultDataFrame(DataFrame):
                               ('dst_addr', parse_ip_address),
                               ('src_addr', parse_ip_address)],
                     'index': ['prb_id', 'timestamp']
-                })
+                }) # yapf: disable
 
         else:
             print('MeasurementResultDataFrame not implemented for %s' % t)
