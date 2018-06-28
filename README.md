@@ -2,7 +2,6 @@
 
 [![Python Version](https://img.shields.io/badge/python-3-blue.svg?style=flat)](#)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/maxmouchet/atlas_df/blob/master/LICENSE)
-[![DOI](https://zenodo.org/badge/136143389.svg)](https://zenodo.org/badge/latestdoi/136143389)
 [![Build Status](https://travis-ci.org/maxmouchet/atlas_df.svg?branch=master)](https://travis-ci.org/maxmouchet/atlas_df)
 [![Documentation Status](https://readthedocs.org/projects/atlas_df/badge/?version=latest)](https://atlas-df.readthedocs.io/en/latest/)
 [![Coverage Status](https://coveralls.io/repos/github/maxmouchet/atlas_df/badge.svg?branch=master)](https://coveralls.io/github/maxmouchet/atlas_df?branch=master)
