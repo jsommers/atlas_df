@@ -15,7 +15,7 @@ atlas_df is an interface to the RIPE Atlas API built on top of the official clie
 - Conversion of RIPE Atlas resources to `DataFrame` and `Series` objects.
 - [Caching](#cache) of API requests.
 - geo plot/queries ...
-TODO: logging
+TODO: logging, computation of geo distance between anchors/probes, ...
 
 ## Table of Contents
 
@@ -41,7 +41,7 @@ A comprehensive (TODO) documentation is on [Read the Docs](https://atlas-df.read
 ```python
 from atlas_df.dataframes import AnchorDataFrame
 
-anchors = AnchorDataFrame()
+anchors = AnchorDataFrame.from_api()
 measurements = anchors.loc[1029].fetch_mesh_measurements()
 ```
 

@@ -27,7 +27,8 @@ def store(fn, kwargs, salt, res):
 
 
 def get_cache_fname(fn, kwargs, salt):
-    _hash = hash((salt, json.dumps(dict_to_str_kv(kwargs), sort_keys=True)))
+    # TODO: Fix fn.__name__ -> lambda
+    _hash = hash((fn.__name__, salt, json.dumps(dict_to_str_kv(kwargs), sort_keys=True)))
     _fname = os.path.join(atlas_df.CACHE_DIR, '%s.json' % _hash)
     return _fname
 

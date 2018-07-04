@@ -19,16 +19,38 @@ class AnchorDataFrame(DataFrame):
     def _constructor_sliced(self):
         return AnchorSeries
 
-    def __init__(self, filters={}):
-        if type(filters) is not dict:
-            return super().__init__(filters)
-
+    @classmethod
+    def from_api(cls, filters={}):
+        """
+        Load from the API
+        """
         lst = load_or_fetch_list(AnchorRequest, filters)
+        # Convert k/v pairs, and then from_items
+        return AnchorDataFrame(lst)
+
+    @classmethod
+    def from_dump(cls, url):
+        """
+        Load a dump file (from FTP, or from local), in the format of the FTP
+        """
+        # Convert k/v pairs, and then from_items
+        # df = AnchorDataFrame.from_items(read/open(...))
+        pass
+
+    @classmethod
+    def from_ftp(cls):
+        """
+        Fetch the latest dump from the FTP
+        """
+
+    def __init__(self):
         super().__init__(lst)
 
         transform_df(
             self, {
-                'apply': [('ip_v4', parse_ip_address),
+                'apply': [#('as_v4', int), TODO
+                          #('as_v6', int), TODO (parse NaNs...)
+                          ('ip_v4', parse_ip_address),
                           ('ip_v6', parse_ip_address),
                           ('geometry', parse_geometry)],
                 'index': 'id'
@@ -68,6 +90,35 @@ class AnchorSeries(Series):
         return MeasurementDataFrame(filters)
 
 
+## Probes
+
+class ProbeDataFrame(DataFrame):
+
+    # def __init__(self, kwargs):
+    #     if type(kwargs) is not dict:
+    #         return super().__init__(kwargs)
+
+    #     datasource = kwargs.get('datasource')
+    #     if datasource == 'ripe-api':
+    #         pass
+    #     elif datasource == 'ripe-ftp':
+    #         pass
+    #     elif datasource =
+
+    @classmethod
+    def from_api(cls, filters):
+        pass
+
+    @classmethod
+    def from_ftp(cls):
+        pass
+
+    @classmethod
+    def from_dump(cls, url):
+        # Check if local or remote url
+        # Or pass directly into pandas ?
+        pass
+
 ## Measurements
 
 
@@ -83,6 +134,8 @@ class MeasurementDataFrame(DataFrame):
     def __init__(self, filters):
         if type(filters) is not dict:
             return super().__init__(filters)
+
+        # TODO: Warning when no filters (can be slow, large dataset)
 
         lst = load_or_fetch_list(MeasurementRequest, filters)
         super().__init__(lst)
