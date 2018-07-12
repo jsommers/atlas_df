@@ -25,29 +25,9 @@ class AnchorDataFrame(DataFrame):
         Load from the API
         """
         lst = load_or_fetch_list(AnchorRequest, filters)
-        # Convert k/v pairs, and then from_items
-        return AnchorDataFrame(lst)
-
-    @classmethod
-    def from_dump(cls, url):
-        """
-        Load a dump file (from FTP, or from local), in the format of the FTP
-        """
-        # Convert k/v pairs, and then from_items
-        # df = AnchorDataFrame.from_items(read/open(...))
-        pass
-
-    @classmethod
-    def from_ftp(cls):
-        """
-        Fetch the latest dump from the FTP
-        """
-
-    def __init__(self):
-        super().__init__(lst)
-
+        df = cls(lst)  # TODO return df instead on inplace
         transform_df(
-            self, {
+            df, {
                 'apply': [#('as_v4', int), TODO
                           #('as_v6', int), TODO (parse NaNs...)
                           ('ip_v4', parse_ip_address),
@@ -55,6 +35,7 @@ class AnchorDataFrame(DataFrame):
                           ('geometry', parse_geometry)],
                 'index': 'id'
             }) # yapf: disable
+        return df
 
 
 # class AnchorGeoDataFrame(GeoDataFrame):
@@ -115,9 +96,14 @@ class ProbeDataFrame(DataFrame):
 
     @classmethod
     def from_dump(cls, url):
+        """
+        Load a dump file (from FTP, or from local), in the format of the FTP.
+        If url=none, fetch latest from the FTP.
+        """
         # Check if local or remote url
         # Or pass directly into pandas ?
         pass
+
 
 ## Measurements
 
