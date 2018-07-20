@@ -1,4 +1,4 @@
-import re
+import re, math
 from numpy import nan
 from pandas import DataFrame, Series
 from geopandas import GeoDataFrame, GeoSeries
@@ -21,15 +21,11 @@ class AnchorDataFrame(DataFrame):
 
     @classmethod
     def from_api(cls, filters={}):
-        """
-        Load from the API
-        """
-        lst = load_or_fetch_list(AnchorRequest, filters)
-        df = cls(lst)  # TODO return df instead on inplace
+        df = cls(load_or_fetch_list(AnchorRequest, filters))
         transform_df(
             df, {
-                'apply': [#('as_v4', int), TODO
-                          #('as_v6', int), TODO (parse NaNs...)
+                'apply': [('as_v4', lambda x: int(x) if not math.isnan(x) else nan),
+                          ('as_v6', lambda x: int(x) if not math.isnan(x) else nan),
                           ('ip_v4', parse_ip_address),
                           ('ip_v6', parse_ip_address),
                           ('geometry', parse_geometry)],
@@ -74,39 +70,28 @@ class AnchorSeries(Series):
 ## Probes
 
 class ProbeDataFrame(DataFrame):
+    @property
+    def _constructor(self):
+        return ProbeDataFrame
 
-    # def __init__(self, kwargs):
-    #     if type(kwargs) is not dict:
-    #         return super().__init__(kwargs)
-
-    #     datasource = kwargs.get('datasource')
-    #     if datasource == 'ripe-api':
-    #         pass
-    #     elif datasource == 'ripe-ftp':
-    #         pass
-    #     elif datasource =
+    @property
+    def _constructor_sliced(self):
+        return ProbeSeries
 
     @classmethod
     def from_api(cls, filters):
-        pass
+        raise NotImplementedError()
 
     @classmethod
     def from_ftp(cls):
-        pass
+        raise NotImplementedError()
 
-    @classmethod
-    def from_dump(cls, url):
-        """
-        Load a dump file (from FTP, or from local), in the format of the FTP.
-        If url=none, fetch latest from the FTP.
-        """
-        # Check if local or remote url
-        # Or pass directly into pandas ?
-        pass
+
+class ProbeSeries(Series):
+    pass
 
 
 ## Measurements
-
 
 class MeasurementDataFrame(DataFrame):
     @property
@@ -117,17 +102,12 @@ class MeasurementDataFrame(DataFrame):
     def _constructor_sliced(self):
         return MeasurementSeries
 
-    def __init__(self, filters):
-        if type(filters) is not dict:
-            return super().__init__(filters)
-
+    @classmethod
+    def from_api(cls, filters={}):
         # TODO: Warning when no filters (can be slow, large dataset)
-
-        lst = load_or_fetch_list(MeasurementRequest, filters)
-        super().__init__(lst)
-
+        df = cls(load_or_fetch_list(MeasurementRequest, filters))
         transform_df(
-            self, {
+            df, {
                 'apply': [
                     ('creation_time', parse_timestamp),
                     ('start_time', parse_timestamp),
@@ -138,6 +118,7 @@ class MeasurementDataFrame(DataFrame):
                 ],
                 'index': 'id'
             }) # yapf: disable
+        return df
 
 
 class MeasurementSeries(Series):
@@ -158,21 +139,18 @@ class MeasurementResultDataFrame(DataFrame):
     def _constructor_sliced(self):
         return MeasurementResultSeries
 
-    def __init__(self, filters):
-        if type(filters) is not dict:
-            return super().__init__(filters)
+    @classmethod
+    def from_api(cls, filters={}):
+        # TODO: Warning when no filters (can be slow, large dataset)
+        df = cls(load_or_fetch(lambda **x: AtlasResultsRequest(**x).create()[1], filters))
 
-        lst = load_or_fetch(lambda **x: AtlasResultsRequest(**x).create()[1],
-                            filters)
-        super().__init__(lst)
-
-        if len(self['type'].unique()) > 1:
+        if len(df['type'].unique()) > 1:
             print('Warning: more than 1 measurement type in results')
-        t = self['type'].unique()[0]
+        t = df['type'].unique()[0]
 
         if t == 'ping':
             transform_df(
-                self, {
+                df, {
                     'apply': [('timestamp', parse_timestamp),
                               ('stored_timestamp', parse_timestamp),
                               ('dst_addr', parse_ip_address),
@@ -184,7 +162,7 @@ class MeasurementResultDataFrame(DataFrame):
                 }) # yapf: disable
         elif t == 'traceroute':
             transform_df(
-                self, {
+                df, {
                     'apply': [('timestamp', parse_timestamp),
                               ('stored_timestamp', parse_timestamp),
                               ('dst_addr', parse_ip_address),
@@ -193,7 +171,9 @@ class MeasurementResultDataFrame(DataFrame):
                 }) # yapf: disable
 
         else:
-            print('MeasurementResultDataFrame not implemented for %s' % t)
+            raise NotImplementedError('MeasurementResultDataFrame not implemented for %s' % t)
+
+        return df
 
 
 class MeasurementResultSeries(Series):

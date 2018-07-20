@@ -2,8 +2,10 @@ from .dataframes import AnchorDataFrame
 
 
 class AnchoringMesh(object):
-    def __init__(self):
-        self.anchors = AnchorDataFrame()
+
+    @classmethod
+    def from_api(self, filters):
+        self.anchors = AnchorDataFrame.from_api(filters)
         # TODO: Add methods/df to see anchoring mesh stats (number of nodes, ...)
         # TODO: Add method for generating overlay
 
@@ -21,12 +23,13 @@ class AnchoringMesh(object):
     # A towards B
     def fetch_results(self, fqdn_a, fqdn_b, af, t, filters={}):
         res_ab = self.__fetch_results(fqdn_a, fqdn_b, af, t, filters)
-        res_ba = self.__fetch_results(fqdn_b, fqdn_a, af, t, filters)
-        return res_ab, res_ba
+        return res_ab
 
     # A towards B, and B towards A
     def fetch_results_pair(self, fqdn_a, fqdn_b, af, t, filters={}):
-        pass
+        res_ab = self.__fetch_results(fqdn_a, fqdn_b, af, t, filters)
+        res_ba = self.__fetch_results(fqdn_b, fqdn_a, af, t, filters)
+        return res_ab, res_ba
 
     # # All towards B, and B towards all
     # def fetch_results_all_pairs(self, fqdn_b, af, t, filters={}):

@@ -5,13 +5,13 @@ from atlas_df.dataframes import AnchorDataFrame, AnchorSeries # AnchorGeoDataFra
 
 
 def test_anchors_indexing_type():
-    anchors = AnchorDataFrame()
+    anchors = AnchorDataFrame.from_api()
     anchor = anchors[anchors.fqdn == anchors.fqdn.values[0]].iloc[0]
     assert type(anchor) == AnchorSeries
 
 
 def test_anchors_concat_type():
-    anchors = AnchorDataFrame()
+    anchors = AnchorDataFrame.from_api()
     anchors_concat = pd.concat([anchors, anchors])
     assert type(anchors_concat) == AnchorDataFrame
 
