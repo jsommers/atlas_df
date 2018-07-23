@@ -4,6 +4,14 @@ atlas\_df package
 Submodules
 ----------
 
+atlas\_df\.anchoring module
+---------------------------
+
+.. automodule:: atlas_df.anchoring
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 atlas\_df\.dataframes module
 ----------------------------
 

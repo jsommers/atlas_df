@@ -3,6 +3,7 @@ import pandas as pd
 import atlas_df
 from atlas_df.dataframes import AnchorDataFrame, AnchorSeries # AnchorGeoDataFrame
 
+# TODO: Mock API calls.
 
 def test_anchors_indexing_type():
     anchors = AnchorDataFrame.from_api()

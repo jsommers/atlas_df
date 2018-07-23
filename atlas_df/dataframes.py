@@ -1,4 +1,4 @@
-import re, math
+import re, math, logging
 from numpy import nan
 from pandas import DataFrame, Series
 from geopandas import GeoDataFrame, GeoSeries
@@ -21,6 +21,14 @@ class AnchorDataFrame(DataFrame):
 
     @classmethod
     def from_api(cls, filters={}):
+        """Fetch anchors list from Atlas API.
+
+        Args:
+            filters (dict): TODO.
+
+        Returns:
+            AnchorDataFrame
+        """
         df = cls(load_or_fetch_list(AnchorRequest, filters))
         transform_df(
             df, {
@@ -39,7 +47,7 @@ class AnchorDataFrame(DataFrame):
 #     def _constructor(self):
 #         return AnchorGeoDataFrame
 
-#     @property
+#     @propert
 #     def _constructor_sliced(self):
 #         return AnchorSeries
 
@@ -62,9 +70,17 @@ class AnchorDataFrame(DataFrame):
 
 class AnchorSeries(Series):
     def fetch_mesh_measurements(self, filters={}):
+        """Fetch measurements list for the current anchor from Atlas API.
+
+        Args:
+            filters (dict): TODO.
+
+        Returns:
+            MeasurementDataFrame.
+        """
         filters['description__startswith'] = 'Anchoring Mesh Measurement'
         filters['target'] = self['fqdn']
-        return MeasurementDataFrame(filters)
+        return MeasurementDataFrame.from_api(filters)
 
 
 ## Probes
@@ -80,10 +96,23 @@ class ProbeDataFrame(DataFrame):
 
     @classmethod
     def from_api(cls, filters):
+        """Fetch probes list from Atlas API.
+
+        Args:
+            filters (dict): TODO.
+
+        Returns:
+            ProbeDataFrame
+        """
         raise NotImplementedError()
 
     @classmethod
-    def from_ftp(cls):
+    def from_ftp(cls): # TODO: Arg for file ?
+        """Fetch probes list from Atlas FTP.
+
+        Returns:
+            ProbeDataFrame
+        """
         raise NotImplementedError()
 
 
@@ -104,7 +133,17 @@ class MeasurementDataFrame(DataFrame):
 
     @classmethod
     def from_api(cls, filters={}):
-        # TODO: Warning when no filters (can be slow, large dataset)
+        """Fetch measurements list from Atlas API.
+
+        Args:
+            filters (dict): TODO.
+
+        Returns:
+            MeasurementDataFrame
+        """
+        if filters == {}:
+            logging.getLogger(__name__).warning('No filters specified. This will be slow.')
+
         df = cls(load_or_fetch_list(MeasurementRequest, filters))
         transform_df(
             df, {
@@ -123,8 +162,16 @@ class MeasurementDataFrame(DataFrame):
 
 class MeasurementSeries(Series):
     def fetch_results(self, filters={}):
+        """Fetch results for the current measurement from Atlas API.
+
+        Args:
+            filters (dict): TODO.
+
+        Returns:
+            MeasurementResultDataFrame
+        """
         filters['msm_id'] = int(self.name)
-        return MeasurementResultDataFrame(filters)
+        return MeasurementResultDataFrame.from_api(filters)
 
 
 ## Results
@@ -141,7 +188,18 @@ class MeasurementResultDataFrame(DataFrame):
 
     @classmethod
     def from_api(cls, filters={}):
-        # TODO: Warning when no filters (can be slow, large dataset)
+        """Fetch results from Atlas API.
+
+        Args:
+            filters (dict): TODO.
+
+        Returns:
+            MeasurementResultDataFrame
+        """
+        if filters == {}:
+            logging.getLogger(__name__).warning('No filters specified. This will be slow.')
+
+        print(filters)
         df = cls(load_or_fetch(lambda **x: AtlasResultsRequest(**x).create()[1], filters))
 
         if len(df['type'].unique()) > 1:
