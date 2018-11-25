@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="atlas_df",
-    version="0.0.2",
+    version="0.0.4",
     author="Maxime Mouchet",
     author_email="max@maxmouchet.com",
     description="A dataframe-oriented interface to RIPE Atlas.",
