@@ -14,8 +14,9 @@ class AnchoringMesh(object):
 
     # A towards B
     def __fetch_results(self, fqdn_a, fqdn_b, af, t, filters):
-        anchor_a = self.anchors[self.anchors.fqdn == fqdn_a].iloc[0]
-        anchor_b = self.anchors[self.anchors.fqdn == fqdn_b].iloc[0]
+        anchors = AnchorDataFrame.from_api(filters)
+        anchor_a = anchors[anchors.fqdn == fqdn_a].iloc[0]
+        anchor_b = anchors[anchors.fqdn == fqdn_b].iloc[0]
         mesh_measurements_b = anchor_b.fetch_mesh_measurements()
         msm_to_b = mesh_measurements_b[(mesh_measurements_b.af == af) &
                                        (mesh_measurements_b.type == t)].iloc[0]
